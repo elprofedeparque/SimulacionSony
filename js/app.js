@@ -1,54 +1,43 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const canvas = document.getElementById('gl-canvas');
   const imageInput = document.getElementById('image-input');
   const uploadPlaceholder = document.getElementById('upload-placeholder');
   const downloadBtn = document.getElementById('download-btn');
-  const renderer = new LUTRenderer(canvas);
+  const renderer = new CubeLUTRenderer(canvas);
 
-  let currentImage = null;
-  let currentLUTImage = new Image();
+  // Cargar LUT inicial por defecto
+  await renderer.loadCubeLUT('assets/luts/portra400.cube');
 
-  // Cargar LUT por defecto
-  currentLUTImage.src = 'assets/luts/portra400.png';
-
-  // 1. Subir imagen del usuario
+  // 1. Subir imagen
   imageInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      currentImage = new Image();
-      currentImage.onload = () => {
+      const img = new Image();
+      img.onload = () => {
         uploadPlaceholder.style.display = 'none';
         downloadBtn.disabled = false;
-        applyFilter();
+        renderer.setImage(img);
       };
-      currentImage.src = event.target.result;
+      img.src = event.target.result;
     };
     reader.readAsDataURL(file);
   });
 
-  // 2. Selección de Preset en la galería inferior
+  // 2. Cambio de LUT desde los botones
   document.querySelectorAll('.preset-card').forEach(card => {
-    card.addEventListener('click', function() {
+    card.addEventListener('click', async function() {
       document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
       this.classList.add('active');
 
       const lutName = this.getAttribute('data-lut');
-      currentLUTImage = new Image();
-      currentLUTImage.onload = applyFilter;
-      currentLUTImage.src = `assets/luts/${lutName}.png`;
+      await renderer.loadCubeLUT(`assets/luts/${lutName}.cube`);
     });
   });
 
-  function applyFilter() {
-    if (currentImage && currentLUTImage.complete) {
-      renderer.render(currentImage, currentLUTImage);
-    }
-  }
-
-  // 3. Descargar imagen final
+  // 3. Descargar resultado
   downloadBtn.addEventListener('click', () => {
     const link = document.createElement('a');
     link.download = 'filmsim-photo.jpg';
