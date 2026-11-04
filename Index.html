@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>FilmSim</title>
+  
+  <!-- Configuración PWA iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FilmSim">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  
+  <main class="app-container">
+    <!-- ÁREA PRINCIPAL DE VISUALIZACIÓN -->
+    <div class="viewport">
+      <canvas id="gl-canvas"></canvas>
+      
+      <!-- Pantalla inicial de carga -->
+      <div id="upload-placeholder" class="upload-box">
+        <label for="image-input" class="upload-btn">
+          <span>Subir Foto</span>
+        </label>
+        <input type="file" id="image-input" accept="image/*" hidden>
+      </div>
+    </div>
+
+    <!-- CARROUSEL INFERIOR DE PRESETS / LUTS -->
+    <footer class="presets-toolbar">
+      <div class="presets-scroll">
+        
+        <button class="preset-card active" data-lut="portra400">
+          <img src="assets/previews/preview-portra.jpg" alt="Portra 400">
+          <span>Kodak Portra 400</span>
+        </button>
+
+        <button class="preset-card" data-lut="fuji400h">
+          <img src="assets/previews/preview-fuji.jpg" alt="Fuji Pro 400H">
+          <span>Fuji Pro 400H</span>
+        </button>
+
+        <button class="preset-card" data-lut="cinestill800">
+          <img src="assets/previews/preview-cinestill.jpg" alt="CineStill 800T">
+          <span>CineStill 800T</span>
+        </button>
+
+      </div>
+      
+      <!-- Botón Exportar -->
+      <button id="download-btn" class="export-btn" disabled>Guardar Foto</button>
+    </footer>
+  </main>
+
+  <script src="js/lut-renderer.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
